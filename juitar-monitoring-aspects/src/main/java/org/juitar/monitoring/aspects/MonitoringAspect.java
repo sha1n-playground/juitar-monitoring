@@ -7,7 +7,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.juitar.monitoring.api.MethodMonitor;
 import org.juitar.monitoring.api.Monitored;
-import org.juitar.monitoring.spi.Context;
+import org.juitar.monitoring.spi.config.MonitorConfiguration;
+import org.juitar.monitoring.spi.context.Context;
 
 import java.lang.reflect.Method;
 
@@ -31,14 +32,21 @@ public class MonitoringAspect {
         Monitored monitored = method.getAnnotation(Monitored.class);
         MethodMonitor methodMonitor = monitored.metaType().newInstance();
 
-        Context context = ContextFactory.get();
-        methodMonitor.before(monitored, context);
-
         Object returnObject = null;
-        try {
+
+        Context context = SpiFactory.getContext();
+        MonitorConfiguration monitorConfiguration = SpiFactory.getMonitorConfiguration(monitored.category());
+
+        if (!monitorConfiguration.isEnabled()) {
             returnObject = pjp.proceed();
-        } finally {
-            methodMonitor.after(monitored, context);
+        } else {
+            methodMonitor.before(monitored, context);
+
+            try {
+                returnObject = pjp.proceed();
+            } finally {
+                methodMonitor.after(monitored, context);
+            }
         }
 
         return returnObject;

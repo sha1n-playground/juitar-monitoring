@@ -1,8 +1,8 @@
 package org.juitar.monitoring.aspects;
 
 import org.easymock.EasyMock;
-import org.juitar.monitoring.spi.Context;
-import org.juitar.monitoring.spi.ContextAccess;
+import org.juitar.monitoring.spi.context.Context;
+import org.juitar.monitoring.spi.context.ContextAccess;
 
 /**
  * @author sha1n

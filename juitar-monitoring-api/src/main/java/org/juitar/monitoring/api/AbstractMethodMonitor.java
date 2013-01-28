@@ -1,6 +1,6 @@
 package org.juitar.monitoring.api;
 
-import org.juitar.monitoring.spi.Context;
+import org.juitar.monitoring.spi.context.Context;
 
 /**
  * @author sha1n
@@ -14,15 +14,11 @@ abstract class AbstractMethodMonitor implements MethodMonitor {
 
     @Override
     public final void before(Monitored monitored, Context context) {
-//        System.out.println("Before " + context.getCorrelationId());
-
         internBefore(monitored, context);
     }
 
     @Override
     public final void after(Monitored monitored, Context context) {
         internAfter(monitored, context);
-
-//        System.out.println("After " + context.getCorrelationId());
     }
 }

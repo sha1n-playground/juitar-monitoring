@@ -1,6 +1,6 @@
 package org.juitar.monitoring.api;
 
-import org.juitar.monitoring.spi.Context;
+import org.juitar.monitoring.spi.context.Context;
 
 /**
  * @author sha1n
@@ -23,7 +23,6 @@ public class MethodTimeMonitor extends AbstractMethodMonitor {
             throw new TimeoutException(
                     "Threshold '" + monitored.threshold() + "' exceeded. Elapsed=" + elapsed);
         }
-//        System.out.println("Elapsed: " + elapsed);
     }
 
 }

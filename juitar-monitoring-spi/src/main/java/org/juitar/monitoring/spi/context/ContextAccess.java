@@ -1,4 +1,4 @@
-package org.juitar.monitoring.spi;
+package org.juitar.monitoring.spi.context;
 
 /**
  * @author sha1n

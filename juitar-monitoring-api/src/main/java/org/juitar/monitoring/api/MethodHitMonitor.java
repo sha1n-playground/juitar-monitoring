@@ -1,6 +1,6 @@
 package org.juitar.monitoring.api;
 
-import org.juitar.monitoring.spi.Context;
+import org.juitar.monitoring.spi.context.Context;
 
 import java.util.concurrent.atomic.AtomicLong;
 

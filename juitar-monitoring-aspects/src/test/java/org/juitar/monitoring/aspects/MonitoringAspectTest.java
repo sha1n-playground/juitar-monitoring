@@ -13,4 +13,15 @@ public class MonitoringAspectTest {
     public void testMethodTimeout() throws InterruptedException {
         new MonitoredDummy().executeTimeoutMethod();
     }
+
+    @Test
+    public void testNiceMethod() throws InterruptedException {
+        new MonitoredDummy().executeNiceMethod();
+    }
+
+    @Test
+    public void testMethodDisabledMonitor() throws InterruptedException {
+        new MonitoredDummy().executeTimeoutMethodWithDisabledCategory();
+    }
+
 }

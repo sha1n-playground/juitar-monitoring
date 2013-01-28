@@ -8,7 +8,7 @@ If you are looking for something serious, this is not it. This repo is used main
 Usage example:
 -------------
 
-    @Monitored(threshold = 10, operation = MonitoredOperation.DATABASE_ACCESS)
+    @Monitored(threshold = 10)
     @Override
     public Result doWork(Work work) {
 

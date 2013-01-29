@@ -9,7 +9,6 @@
     <version>1.0</version>
     <modules>
         <module>juitar-monitoring-api</module>
-        <module>juitar-monitoring-spi</module>
         <module>juitar-monitoring-aspects</module>
     </modules>
     <packaging>pom</packaging>

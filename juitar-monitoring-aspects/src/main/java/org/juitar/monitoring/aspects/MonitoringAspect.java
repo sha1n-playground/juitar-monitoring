@@ -22,41 +22,62 @@ public class MonitoringAspect {
 
     private static final SpiFactory spiFactory = new SpiFactory();
 
+    private static boolean isGloballyDisabled() {
+        return System.getProperties().containsKey("org.juitar.monitoring.aspects.Off");
+    }
+
     @Pointcut(value = "execution(@org.juitar.monitoring.api.Monitored * *(..))")
     public void executeMonitored() {
     }
 
-
     @Around("executeMonitored()")
     public Object aroundMonitoredMethod(final ProceedingJoinPoint pjp) throws Throwable {
+
+        Object returnObject;
+
+        if (isGloballyDisabled()) {
+            returnObject = pjp.proceed();
+        } else {
+            returnObject = executeMonitoredMethod(pjp);
+        }
+        return returnObject;
+    }
+
+    private Object executeMonitoredMethod(ProceedingJoinPoint pjp) throws Throwable {
+        Object returnObject;
 
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
         Monitored monitored = method.getAnnotation(Monitored.class);
-        MethodMonitor methodMonitor = monitored.metaType().newInstance();
-
-        Object returnObject = null;
-
-        Context context = spiFactory.getContext();
         MonitorConfiguration monitorConfiguration = getMonitorConfiguration(monitored);
 
         if (!monitorConfiguration.isEnabled()) {
             returnObject = pjp.proceed();
         } else {
-            methodMonitor.before(monitored, context);
+            returnObject = executeWithMonitor(pjp, monitored);
+        }
+        return returnObject;
+    }
 
-            try {
-                returnObject = pjp.proceed();
-            } finally {
-                methodMonitor.after(monitored, context);
-            }
+    private Object executeWithMonitor(final ProceedingJoinPoint pjp, final Monitored monitored) throws Throwable {
+
+        Object returnObject;
+
+        Context context = spiFactory.getContext();
+        MethodMonitor methodMonitor = monitored.metaType().newInstance();
+
+        methodMonitor.before(monitored, context);
+
+        try {
+            returnObject = pjp.proceed();
+        } finally {
+            methodMonitor.after(monitored, context);
         }
 
         return returnObject;
-
     }
 
-    private MonitorConfiguration getMonitorConfiguration(Monitored monitored) {
+    private MonitorConfiguration getMonitorConfiguration(final Monitored monitored) {
         MonitorConfigurationProvider monitorConfigurationProvider = spiFactory.getMonitorConfigurationProvider();
 
         // Operation configuration has the highest priority.

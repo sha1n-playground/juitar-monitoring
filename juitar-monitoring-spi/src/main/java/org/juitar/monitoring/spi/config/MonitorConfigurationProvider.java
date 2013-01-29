@@ -6,5 +6,12 @@ package org.juitar.monitoring.spi.config;
  */
 public interface MonitorConfigurationProvider {
 
-    MonitorConfiguration getMonitorConfiguration(String category);
+    MonitorConfiguration getDomainConfiguration(String domain);
+
+    MonitorConfiguration getCategoryConfiguration(String category);
+
+    MonitorConfiguration getOperationConfiguration(String operation);
+
+    MonitorConfiguration getDefaultConfiguration();
+
 }

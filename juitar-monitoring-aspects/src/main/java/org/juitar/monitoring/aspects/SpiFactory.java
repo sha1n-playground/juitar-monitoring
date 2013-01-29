@@ -1,38 +1,31 @@
 package org.juitar.monitoring.aspects;
 
-import org.juitar.monitoring.spi.config.MonitorConfiguration;
 import org.juitar.monitoring.spi.config.MonitorConfigurationProvider;
 import org.juitar.monitoring.spi.context.Context;
 import org.juitar.monitoring.spi.context.ContextAccess;
 
-import java.util.ServiceLoader;
+import java.util.List;
 
 /**
  * @author Shai
  * Date: 1/28/13
  */
-public class SpiFactory {
+class SpiFactory {
 
-    private static final ContextAccess CONTEXT_ACCESS;
-    private static final MonitorConfigurationProvider MONITOR_CONFIGURATION_PROVIDER;
+    private final ContextAccess CONTEXT_ACCESS;
+    private final List<MonitorConfigurationProvider> MONITOR_CONFIGURATION_PROVIDERS;
 
-    static {
-        ServiceLoader<MonitorConfigurationProvider> monitorConfigurationProviderServiceLoader = ServiceLoader.load(MonitorConfigurationProvider.class, SpiFactory.class.getClassLoader());
-        ServiceLoader<ContextAccess> contextAccessServiceLoader = ServiceLoader.load(ContextAccess.class, SpiFactory.class.getClassLoader());
-
-        CONTEXT_ACCESS = contextAccessServiceLoader.iterator().next();
-        MONITOR_CONFIGURATION_PROVIDER = monitorConfigurationProviderServiceLoader.iterator().next();
+    public SpiFactory() {
+        CONTEXT_ACCESS = SpiLoadUtils.loadContextAccess();
+        MONITOR_CONFIGURATION_PROVIDERS = SpiLoadUtils.loadMonitorConfigurationProviders();
     }
 
-    private SpiFactory() {
-    }
-
-    public static Context getContext() {
+    public Context getContext() {
         return CONTEXT_ACCESS.get();
     }
 
-    public static MonitorConfiguration getMonitorConfiguration(String category) {
-        return MONITOR_CONFIGURATION_PROVIDER.getMonitorConfiguration(category);
+    public MonitorConfigurationProvider getMonitorConfigurationProvider() {
+        return MONITOR_CONFIGURATION_PROVIDERS.get(0); // TODO decide whether multiple providers are supported.
     }
 
 }

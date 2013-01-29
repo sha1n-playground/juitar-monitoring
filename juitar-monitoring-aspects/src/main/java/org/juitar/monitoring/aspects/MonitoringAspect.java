@@ -8,6 +8,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.juitar.monitoring.api.MethodMonitor;
 import org.juitar.monitoring.api.Monitored;
 import org.juitar.monitoring.spi.config.MonitorConfiguration;
+import org.juitar.monitoring.spi.config.MonitorConfigurationProvider;
 import org.juitar.monitoring.spi.context.Context;
 
 import java.lang.reflect.Method;
@@ -18,6 +19,8 @@ import java.lang.reflect.Method;
  */
 @Aspect
 public class MonitoringAspect {
+
+    private static final SpiFactory spiFactory = new SpiFactory();
 
     @Pointcut(value = "execution(@org.juitar.monitoring.api.Monitored * *(..))")
     public void executeMonitored() {
@@ -34,8 +37,8 @@ public class MonitoringAspect {
 
         Object returnObject = null;
 
-        Context context = SpiFactory.getContext();
-        MonitorConfiguration monitorConfiguration = SpiFactory.getMonitorConfiguration(monitored.category());
+        Context context = spiFactory.getContext();
+        MonitorConfiguration monitorConfiguration = getMonitorConfiguration(monitored);
 
         if (!monitorConfiguration.isEnabled()) {
             returnObject = pjp.proceed();
@@ -51,6 +54,30 @@ public class MonitoringAspect {
 
         return returnObject;
 
+    }
+
+    private MonitorConfiguration getMonitorConfiguration(Monitored monitored) {
+        MonitorConfigurationProvider monitorConfigurationProvider = spiFactory.getMonitorConfigurationProvider();
+
+        // Operation configuration has the highest priority.
+        MonitorConfiguration monitorConfiguration = monitorConfigurationProvider.getOperationConfiguration(monitored.operation());
+
+        // Try to fallback to category configuration.
+        if (monitorConfiguration == null) {
+            monitorConfiguration = monitorConfigurationProvider.getCategoryConfiguration(monitored.category());
+        }
+
+        // Try to fallback to domain configuration
+        if (monitorConfiguration == null) {
+            monitorConfiguration = monitorConfigurationProvider.getDomainConfiguration(monitored.domain());
+        }
+
+        // Fallback to default
+        if (monitorConfiguration == null) {
+            monitorConfiguration = monitorConfigurationProvider.getDefaultConfiguration();
+        }
+
+        return monitorConfiguration;
     }
 
 }

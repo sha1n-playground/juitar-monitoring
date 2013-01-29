@@ -9,19 +9,29 @@ import org.junit.Test;
  */
 public class MonitoringAspectTest {
 
+
     @Test(expected = TimeoutException.class)
-    public void testMethodTimeout() throws InterruptedException {
-        new MonitoredDummy().executeTimeoutMethod();
+    public void testCategoryDisabledOperationEnabled() throws InterruptedException {
+        new MonitoredDummy().categoryDisabledOperationEnabled();
+    }
+
+    @Test(expected = TimeoutException.class)
+    public void testDomainCategoryDisabledOperationEnabled() throws InterruptedException {
+        new MonitoredDummy().domainCategoryDisabledOperationEnabled();
+    }
+
+    @Test(expected = TimeoutException.class)
+    public void testDomainDisabledCategoryEnabled() throws InterruptedException {
+        new MonitoredDummy().domainDisabledCategoryEnabled();
     }
 
     @Test
-    public void testNiceMethod() throws InterruptedException {
-        new MonitoredDummy().executeNiceMethod();
+    public void testDefaultDisabled() throws InterruptedException {
+        new MonitoredDummy().defaultDisabled();
     }
 
     @Test
-    public void testMethodDisabledMonitor() throws InterruptedException {
-        new MonitoredDummy().executeTimeoutMethodWithDisabledCategory();
+    public void testAllDisabled() throws InterruptedException {
+        new MonitoredDummy().allDisabled();
     }
-
 }

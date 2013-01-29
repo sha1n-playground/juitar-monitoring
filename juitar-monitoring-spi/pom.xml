@@ -11,5 +11,13 @@
 
     <artifactId>juitar-monitoring-spi</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.juitar.monitoring</groupId>
+            <artifactId>juitar-monitoring-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
 
 </project>

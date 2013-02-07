@@ -12,4 +12,9 @@ public class MonitorConfigurationMock implements MonitorConfiguration {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public long getThreshold() {
+        return 1000;
+    }
 }

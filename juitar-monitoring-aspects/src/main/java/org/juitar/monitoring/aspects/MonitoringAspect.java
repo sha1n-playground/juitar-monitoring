@@ -54,24 +54,24 @@ public class MonitoringAspect {
         if (!monitorConfiguration.isEnabled()) {
             returnObject = pjp.proceed();
         } else {
-            returnObject = executeWithMonitor(pjp, monitored);
+            returnObject = executeWithMonitor(pjp, monitored, monitorConfiguration);
         }
         return returnObject;
     }
 
-    private Object executeWithMonitor(final ProceedingJoinPoint pjp, final Monitored monitored) throws Throwable {
+    private Object executeWithMonitor(final ProceedingJoinPoint pjp, final Monitored monitored, MonitorConfiguration monitorConfiguration) throws Throwable {
 
         Object returnObject;
 
         Context context = spiFactory.getContext();
         MethodMonitor methodMonitor = monitored.metaType().newInstance();
 
-        methodMonitor.before(monitored, context);
+        methodMonitor.before(monitored, monitorConfiguration, context);
 
         try {
             returnObject = pjp.proceed();
         } finally {
-            methodMonitor.after(monitored, context);
+            methodMonitor.after(monitored, monitorConfiguration, context);
         }
 
         return returnObject;

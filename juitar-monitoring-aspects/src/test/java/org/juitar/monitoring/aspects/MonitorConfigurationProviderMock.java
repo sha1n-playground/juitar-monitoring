@@ -79,6 +79,7 @@ public class MonitorConfigurationProviderMock implements MonitorConfigurationPro
 
     private MonitorConfiguration prepareMock(MonitorConfiguration monitorConfiguration) {
         if (monitorConfiguration != null) {
+            EasyMock.expect(monitorConfiguration.getThreshold()).andReturn(1000L);
             EasyMock.replay(monitorConfiguration);
         }
         return monitorConfiguration;

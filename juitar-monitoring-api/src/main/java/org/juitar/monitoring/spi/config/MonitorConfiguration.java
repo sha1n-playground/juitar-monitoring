@@ -17,4 +17,11 @@ public interface MonitorConfiguration {
      * @return boolean
      */
     boolean isEnabled();
+
+    /**
+     * Returns the threshold value for the a monitor.
+     *
+     * @return an execution threshold in milliseconds.
+     */
+    long getThreshold();
 }

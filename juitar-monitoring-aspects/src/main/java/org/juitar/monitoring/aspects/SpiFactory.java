@@ -1,8 +1,6 @@
 package org.juitar.monitoring.aspects;
 
 import org.juitar.monitoring.spi.config.MonitorConfigurationProvider;
-import org.juitar.monitoring.spi.context.Context;
-import org.juitar.monitoring.spi.context.ContextAccess;
 
 import java.util.List;
 
@@ -12,16 +10,10 @@ import java.util.List;
  */
 class SpiFactory {
 
-    private final ContextAccess CONTEXT_ACCESS;
     private final List<MonitorConfigurationProvider> MONITOR_CONFIGURATION_PROVIDERS;
 
     public SpiFactory() {
-        CONTEXT_ACCESS = SpiLoadUtils.loadContextAccess();
         MONITOR_CONFIGURATION_PROVIDERS = SpiLoadUtils.loadMonitorConfigurationProviders();
-    }
-
-    public Context getContext() {
-        return CONTEXT_ACCESS.get();
     }
 
     public MonitorConfigurationProvider getMonitorConfigurationProvider() {

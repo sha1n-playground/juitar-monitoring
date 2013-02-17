@@ -1,7 +1,6 @@
 package org.juitar.monitoring.api;
 
 import org.juitar.monitoring.spi.config.MonitorConfiguration;
-import org.juitar.monitoring.spi.context.Context;
 
 /**
  * @author sha1n
@@ -12,12 +11,12 @@ public class MethodTimeMonitor extends AbstractMethodMonitor {
     private long start = 0L;
 
     @Override
-    protected void internBefore(Monitored monitored, MonitorConfiguration monitorConfiguration, Context ctx) {
+    protected void internBefore(Monitored monitored, MonitorConfiguration monitorConfiguration) {
         this.start = System.currentTimeMillis();
     }
 
     @Override
-    protected void internAfter(Monitored monitored, MonitorConfiguration monitorConfiguration, Context ctx) {
+    protected void internAfter(Monitored monitored, MonitorConfiguration monitorConfiguration) {
         long elapsed = System.currentTimeMillis() - start;
         long threshold = getFinalThreshold(monitored, monitorConfiguration);
         if (threshold != 0L && (monitored.threshold() < elapsed)) {

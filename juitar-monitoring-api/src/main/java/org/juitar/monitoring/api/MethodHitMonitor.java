@@ -1,7 +1,6 @@
 package org.juitar.monitoring.api;
 
 import org.juitar.monitoring.spi.config.MonitorConfiguration;
-import org.juitar.monitoring.spi.context.Context;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +26,7 @@ public class MethodHitMonitor extends AbstractMethodMonitor {
     }
 
     @Override
-    protected void internBefore(Monitored monitored, MonitorConfiguration monitorConfiguration, Context ctx) {
+    protected void internBefore(Monitored monitored, MonitorConfiguration monitorConfiguration) {
         MethodInvocationProbe probe = getProbe(monitored);
         if (probe.hit()) {
             // TODO: Here the data should be accumulated or reported somehow.
@@ -36,6 +35,6 @@ public class MethodHitMonitor extends AbstractMethodMonitor {
     }
 
     @Override
-    protected void internAfter(Monitored monitored, MonitorConfiguration monitorConfiguration, Context ctx) {
+    protected void internAfter(Monitored monitored, MonitorConfiguration monitorConfiguration) {
     }
 }

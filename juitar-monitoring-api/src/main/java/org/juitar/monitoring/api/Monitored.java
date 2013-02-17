@@ -42,6 +42,13 @@ public @interface Monitored {
     long threshold() default 0L;
 
     /**
+     * Whether to report method hits per second.
+     *
+     * @return {@code true} to turn on hit-per-second measurement and report, otherwise {@code false}.
+     */
+    boolean reportHitsPerSecond() default false;
+
+    /**
      * Returns the class which implements the monitor. The default is {@link MethodTimeMonitor}.
      * <p>
      *     The specified class must have a zero arguments constructor.

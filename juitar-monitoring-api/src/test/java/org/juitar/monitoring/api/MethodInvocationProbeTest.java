@@ -1,6 +1,5 @@
-package org.juitar.monitoring.aspects;
+package org.juitar.monitoring.api;
 
-import org.juitar.monitoring.api.MethodInvocationProbe;
 import org.junit.Assert;
 import org.junit.Test;
 

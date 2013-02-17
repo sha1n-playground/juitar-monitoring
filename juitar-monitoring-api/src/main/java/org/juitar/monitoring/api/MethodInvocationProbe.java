@@ -10,12 +10,12 @@ public class MethodInvocationProbe {
     private volatile int lastCount = 0;
 
     public MethodInvocationProbe(final long timeFrame) {
-        this.currentProbe = new TimeFrameCounter(timeFrame, System.currentTimeMillis());
+        this.currentProbe = new TimeFrameCounter(timeFrame);
     }
 
     public final boolean hit() {
-        long hitStamp = System.currentTimeMillis();
-        TimeFrameCounter timeFrameCounter = currentProbe.hit(hitStamp);
+        long hitTimeStamp = System.currentTimeMillis();
+        TimeFrameCounter timeFrameCounter = currentProbe.hit(hitTimeStamp);
         boolean update = timeFrameCounter != currentProbe;
         if (update) {
             lastCount = currentProbe.hitCount;
@@ -40,16 +40,20 @@ public class MethodInvocationProbe {
         private final long frameStartStamp;
         private int hitCount = 0;
 
+        TimeFrameCounter(final long timeFrame) {
+            this(timeFrame, System.currentTimeMillis());
+        }
+
         TimeFrameCounter(final long timeFrame, final long frameStartStamp) {
             this.timeFrame = timeFrame;
             this.frameStartStamp = frameStartStamp;
         }
 
-        public final TimeFrameCounter hit(final long hitStamp) {
+        public final TimeFrameCounter hit(final long hitTimeStamp) {
             TimeFrameCounter next = this;
 
-            if (frameStartStamp <= (hitStamp - timeFrame)) {
-                next = new TimeFrameCounter(timeFrame, hitStamp);
+            if (frameStartStamp <= (hitTimeStamp - timeFrame)) {
+                next = new TimeFrameCounter(timeFrame, hitTimeStamp);
                 next.hitCount = 1;
             } else {
                 hitCount++;

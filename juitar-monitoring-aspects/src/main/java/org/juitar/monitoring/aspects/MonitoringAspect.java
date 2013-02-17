@@ -9,7 +9,6 @@ import org.juitar.monitoring.api.MethodMonitor;
 import org.juitar.monitoring.api.Monitored;
 import org.juitar.monitoring.spi.config.MonitorConfiguration;
 import org.juitar.monitoring.spi.config.MonitorConfigurationProvider;
-import org.juitar.monitoring.spi.context.Context;
 
 import java.lang.reflect.Method;
 
@@ -20,7 +19,7 @@ import java.lang.reflect.Method;
 @Aspect
 public class MonitoringAspect {
 
-    private static final SpiFactory spiFactory = new SpiFactory();
+    private static final SpiFactory SPI_FACTORY = new SpiFactory();
 
     private static boolean isGloballyDisabled() {
         return System.getProperties().containsKey("org.juitar.monitoring.aspects.Off");
@@ -63,22 +62,21 @@ public class MonitoringAspect {
 
         Object returnObject;
 
-        Context context = spiFactory.getContext();
         MethodMonitor methodMonitor = monitored.metaType().newInstance();
 
-        methodMonitor.before(monitored, monitorConfiguration, context);
+        methodMonitor.before(monitored, monitorConfiguration);
 
         try {
             returnObject = pjp.proceed();
         } finally {
-            methodMonitor.after(monitored, monitorConfiguration, context);
+            methodMonitor.after(monitored, monitorConfiguration);
         }
 
         return returnObject;
     }
 
     private MonitorConfiguration getMonitorConfiguration(final Monitored monitored) {
-        MonitorConfigurationProvider monitorConfigurationProvider = spiFactory.getMonitorConfigurationProvider();
+        MonitorConfigurationProvider monitorConfigurationProvider = SPI_FACTORY.getMonitorConfigurationProvider();
 
         // Operation configuration has the highest priority.
         MonitorConfiguration monitorConfiguration = monitorConfigurationProvider.getOperationConfiguration(monitored.operation());

@@ -21,6 +21,12 @@ public class MonitoringAspect {
 
     private static final SpiFactory SPI_FACTORY = new SpiFactory();
 
+    static {
+        if (isGloballyDisabled()) {
+            System.out.println("Monitoring disabled globally.");
+        }
+    }
+
     private static boolean isGloballyDisabled() {
         return System.getProperties().containsKey("org.juitar.monitoring.aspects.Off");
     }
@@ -48,6 +54,7 @@ public class MonitoringAspect {
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
         Monitored monitored = method.getAnnotation(Monitored.class);
+        System.out.println(monitored + ":" + signature);
         MonitorConfiguration monitorConfiguration = getMonitorConfiguration(monitored);
 
         if (!monitorConfiguration.isEnabled()) {

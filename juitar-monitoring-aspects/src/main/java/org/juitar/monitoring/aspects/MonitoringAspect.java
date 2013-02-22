@@ -54,7 +54,6 @@ public class MonitoringAspect {
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
         Monitored monitored = method.getAnnotation(Monitored.class);
-        System.out.println(monitored + ":" + signature);
         MonitorConfiguration monitorConfiguration = getMonitorConfiguration(monitored);
 
         if (!monitorConfiguration.isEnabled()) {
